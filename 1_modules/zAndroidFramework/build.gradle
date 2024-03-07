@@ -1,0 +1,45 @@
+def buildNumber = 5
+def buildDate = "20191219"
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion androidSDKTargetAndCompileToolsVersion
+
+    defaultConfig {
+        minSdkVersion androidSDKMin
+        targetSdkVersion androidSDKTargetAndCompileToolsVersion
+        versionCode buildNumber
+        versionName "3.2.$versionCode.$buildDate"
+        version = android.defaultConfig.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${variant.name}_${version}_${project.name}.aar"
+        }
+    }
+}
+
+dependencies {
+    implementation retrofitRestClientAndroid
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation kotlinStd
+    implementation lifecycleAndroid
+    implementation appcompatAndroid
+    implementation retrofitJsonSerializer
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+}
